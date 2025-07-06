@@ -168,6 +168,19 @@
         .slider.round {
             border-radius: 22px;
         }
+        
+        /* Status-based border styling */
+        .comment-status-pending {
+            border: 3px solid #ffc107 !important; /* Yellow border for pending */
+        }
+        
+        .comment-status-approved {
+            border: 3px solid #28a745 !important; /* Green border for approved */
+        }
+        
+        .comment-status-rejected {
+            border: 3px solid #dc3545 !important; /* Red border for rejected */
+        }
     </style>
     <umb-box>
         <umb-box-header title="Current Node and User Info"></umb-box-header>
@@ -222,7 +235,14 @@
                 </div>
             </div>
             <div class="comments-list">
-                <div ng-repeat="comment in vm.Comments | filter:{parentId: null}" class="card comments-section-card p-3" style="padding:15px; position:relative;">
+                <div ng-repeat="comment in vm.Comments | filter:{parentId: null}" 
+                     class="card comments-section-card p-3" 
+                     ng-class="{
+                         'comment-status-pending': comment.commentStatusId === 1,
+                         'comment-status-approved': comment.commentStatusId === 2,
+                         'comment-status-rejected': comment.commentStatusId === 3
+                     }"
+                     style="padding:15px; position:relative;">
                     <!-- Overlay if not shown in portal or status is Pending/Rejected -->
                     <div ng-if="!comment.shownInPortal || comment.commentStatusId !== 2" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(220,220,220,0.7);z-index:10;pointer-events:none;"></div>
                     <div class="comment-header" style="display: flex; align-items: center; justify-content: space-between;">
@@ -253,7 +273,7 @@
                         <div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="vm.CanAdminComments">
                             <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openReplyModal(comment)"><i class="fa fa-plus"></i>Reply</button>
                             <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(comment)"><i class="fa fa-edit"></i> Edit</button>
-                            <button class="btn btn-outline-danger btn-sm" ng-click="vm.openDeleteModal(comment)"><i class="fa fa-trash"></i> Delete</button>
+                            <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(comment)"><i class="fa fa-trash"></i> Delete</button>
                         </div>
                         <!--<div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="!vm.CanAdminComments">
                             <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openReplyModal(comment)"><i class="fa fa-plus"></i>Reply</button>
@@ -261,7 +281,14 @@
                         </div>-->
                     </div>
                     <!-- Replies -->
-                    <div ng-repeat="reply in vm.Comments | filter:{parentId: comment.id}" style="padding: 15px; position:relative;" class="card comments-section-card comment-reply p-3">
+                    <div ng-repeat="reply in vm.Comments | filter:{parentId: comment.id}" 
+                         style="padding: 15px; position:relative;" 
+                         class="card comments-section-card comment-reply p-3"
+                         ng-class="{
+                             'comment-status-pending': reply.commentStatusId === 1,
+                             'comment-status-approved': reply.commentStatusId === 2,
+                             'comment-status-rejected': reply.commentStatusId === 3
+                         }">
                         <!-- Overlay if not shown in portal or parent not shown in portal or status is Pending/Rejected -->
                         <div ng-if="!reply.shownInPortal || vm.isParentNotShownInPortal(reply) || reply.commentStatusId !== 2" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(220,220,220,0.7);z-index:10;pointer-events:none;"></div>
                         <div class="comment-header" style="display: flex; align-items: center; justify-content: space-between;">
@@ -291,7 +318,7 @@
                             <div class="comment-text" style="width: 65%;">{{reply.commentText}}</div>
                             <div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="vm.CanAdminComments">
                                 <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)"><i class="fa fa-edit"></i> Edit</button>
-                                <button class="btn btn-outline-danger btn-sm" ng-click="vm.openDeleteModal(reply)"><i class="fa fa-trash"></i> Delete</button>
+                                <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(reply)"><i class="fa fa-trash"></i> Delete</button>
                             </div>
                             <!--<div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="!vm.CanAdminComments">
                                 <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)" ng-if="reply.createdBy === vm.UserName"><i class="fa fa-edit"></i> Edit</button>
