@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CommentsMgt_Domain.Enums
+{
+    public enum CommentStatusesEnum
+    {
+        Pending = 1,
+        Approved = 2,
+        Rejected = 3
+    }
+}
