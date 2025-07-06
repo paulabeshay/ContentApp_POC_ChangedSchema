@@ -36,8 +36,7 @@ angular.module("umbraco")
                 .then(function(response) {
                     vm.Comments = response.data;
                     console.log("Comments loaded: ", vm.Comments);
-                })
-                .catch(function (error) {
+                }, function(error) {
                     console.error("Failed to load comments", error);
                 });
         };

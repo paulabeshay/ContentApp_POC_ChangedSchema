@@ -31,17 +31,6 @@
 		<None Include="App_Plugins\WordCounter\wordcounter.controller.js" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="CommentsMgt\" />
-	  <Folder Include="Controllers\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\CommentsMgt_API\CommentsMgt_API.csproj" />
-	  <ProjectReference Include="..\CommentsMgt_Application\CommentsMgt_Application.csproj" />
-	  <ProjectReference Include="..\CommentsMgt_Infra\CommentsMgt_Infra.csproj" />
-	</ItemGroup>
-
 	<PropertyGroup>
 		<!-- Razor files are needed for the backoffice to work correctly -->
 		<CopyRazorGenerateFilesToPublishDirectory>true</CopyRazorGenerateFilesToPublishDirectory>
