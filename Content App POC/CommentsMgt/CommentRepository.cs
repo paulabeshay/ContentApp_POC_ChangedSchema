@@ -102,5 +102,35 @@ namespace Content_App_POC.CommentsMgt
             }
             await _context.SaveChangesAsync();
         }
+
+        public async Task<PaginatedResult<Comment>> GetByContentIdPagedAsync(int contentId, int page, int pageSize)
+        {
+            // Get parent comments (ParentId == null)
+            var parentQuery = _context.Comments
+                .Where(c => c.ContentId == contentId && !c.IsDeleted && c.ParentId == null);
+
+            var totalCount = await parentQuery.CountAsync();
+
+            var parents = await parentQuery
+                .OrderByDescending(c => c.CreatedOn)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Get all direct children for these parents in one query
+            var parentIds = parents.Select(p => p.Id).ToList();
+            var children = await _context.Comments
+                .Where(c => c.ContentId == contentId && !c.IsDeleted && c.ParentId != null && parentIds.Contains(c.ParentId.Value))
+                .OrderBy(c => c.CreatedOn)
+                .ToListAsync();
+
+            // Attach direct children to their parents
+            foreach (var parent in parents)
+            {
+                parent.Children = children.Where(c => c.ParentId == parent.Id).ToList();
+            }
+
+            return new PaginatedResult<Comment>(parents, totalCount, page, pageSize);
+        }
     }
 } 

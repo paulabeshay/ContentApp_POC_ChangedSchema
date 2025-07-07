@@ -199,17 +199,6 @@
         </umb-box-content>
         <umb-box-content>
             <h4 class="mb-3">Comments</h4>
-            <!--<div ng-if="vm.CanAdminComments" class="add-comment-form mb-4">
-                <div class="add-comment-avatar">
-                    {{vm.getInitials(vm.UserName)}}
-                </div>
-                <form ng-submit="vm.addComment()" class="add-comment-input">
-                    <div class="mb-2">
-                        <textarea ng-model="vm.newCommentText" placeholder="Write a comment..." rows="2" class="form-control"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-sm">Comment</button>
-                </form>
-            </div>-->
             <!-- Add Comment Button (admin only) -->
             <div class="mb-3" ng-if="vm.CanAdminComments" style="margin-bottom: 15px; justify-self: right;">
                 <button class="btn btn-success btn-sm" ng-click="vm.openAddModal()">
@@ -235,7 +224,7 @@
                 </div>
             </div>
             <div class="comments-list">
-                <div ng-repeat="comment in vm.Comments | filter:{parentId: null}" 
+                <div ng-repeat="comment in vm.Comments"
                      class="card comments-section-card p-3" 
                      ng-class="{
                          'comment-status-pending': comment.commentStatusId === 1,
@@ -275,13 +264,9 @@
                             <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(comment)"><i class="fa fa-edit"></i> Edit</button>
                             <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(comment)"><i class="fa fa-trash"></i> Delete</button>
                         </div>
-                        <!--<div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="!vm.CanAdminComments">
-                            <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openReplyModal(comment)"><i class="fa fa-plus"></i>Reply</button>
-                            <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(comment)" ng-if="comment.createdBy === vm.UserName"><i class="fa fa-edit"></i> Edit</button>
-                        </div>-->
                     </div>
                     <!-- Replies -->
-                    <div ng-repeat="reply in vm.Comments | filter:{parentId: comment.id}" 
+                    <div ng-repeat="reply in comment.children" 
                          style="padding: 15px; position:relative;" 
                          class="card comments-section-card comment-reply p-3"
                          ng-class="{
@@ -320,14 +305,16 @@
                                 <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)"><i class="fa fa-edit"></i> Edit</button>
                                 <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(reply)"><i class="fa fa-trash"></i> Delete</button>
                             </div>
-                            <!--<div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="!vm.CanAdminComments">
-                                <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)" ng-if="reply.createdBy === vm.UserName"><i class="fa fa-edit"></i> Edit</button>
-                            </div>-->
                         </div>
                     </div>
                     <div class="comment-divider" ng-if="!$last"></div>
                 </div>
                 <div ng-if="!vm.Comments.length" class="alert alert-info mt-3">No comments yet. Be the first to comment!</div>
+            </div>
+            <div class="pagination-controls" ng-if="vm.totalCount > vm.pageSize" style="margin-top: 20px; display: flex; align-items: center; justify-content: center;">
+                <button class="btn btn-secondary btn-sm" ng-click="vm.prevPage()" ng-disabled="vm.page === 1">Prev</button>
+                <span style="margin: 0 10px;">Page {{vm.page}} of {{(vm.totalCount / vm.pageSize) | ceil}}</span>
+                <button class="btn btn-secondary btn-sm" ng-click="vm.nextPage()" ng-disabled="vm.page * vm.pageSize >= vm.totalCount">Next</button>
             </div>
             <!-- Edit Modal -->
             <div ng-if="vm.showEditModal && vm.CanAdminComments" class="custom-modal-overlay">

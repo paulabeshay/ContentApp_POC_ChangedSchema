@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -34,5 +35,7 @@ namespace Content_App_POC.CommentsMgt
         public DateTime ModifiedOn { get; set; } = DateTime.UtcNow;
         [Required]
         public bool IsDeleted { get; set; } = false;
+        [NotMapped]
+        public List<Comment> Children { get; set; } = new List<Comment>();
     }
 } 

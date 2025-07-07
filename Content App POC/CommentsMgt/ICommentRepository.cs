@@ -14,5 +14,6 @@ namespace Content_App_POC.CommentsMgt
         Task DeleteAsync(Guid id);
         Task UpdateCommentStatusAsync(Guid commentId, int newStatusId);
         Task CascadeStatusToChildrenAsync(Guid parentId, int newStatusId);
+        Task<PaginatedResult<Comment>> GetByContentIdPagedAsync(int contentId, int page, int pageSize);
     }
 } 

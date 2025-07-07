@@ -20,6 +20,9 @@ angular.module("umbraco")
         vm.newCommentText = '';
         vm.editingCommentText = '';
         vm.replyText = '';
+        vm.page = 1;
+        vm.pageSize = 10;
+        vm.totalCount = 0;
 
         // Fetch parent node alias
         contentResource.getById(editorState.current.parentId).then(function (parentNode) {
@@ -32,9 +35,12 @@ angular.module("umbraco")
         // Fetch comments for the current content id
         vm.loadComments = function () {
             console.log("Loading comments for content ID: " + vm.CurrentNodeId);
-            $http.get("/api/comments/content/" + vm.CurrentNodeId)
+            $http.get("/api/comments/content/" + vm.CurrentNodeId + "?page=" + vm.page + "&pageSize=" + vm.pageSize)
                 .then(function(response) {
-                    vm.Comments = response.data;
+                    vm.Comments = response.data.items;
+                    vm.totalCount = response.data.totalCount;
+                    vm.page = response.data.page;
+                    vm.pageSize = response.data.pageSize;
                     console.log("Comments loaded: ", vm.Comments);
                 }, function(error) {
                     console.error("Failed to load comments", error);
@@ -235,4 +241,25 @@ angular.module("umbraco")
             return comment.commentStatusId !== 2; // Only enabled if Approved
         };
 
+        vm.nextPage = function() {
+            if (vm.page * vm.pageSize < vm.totalCount) {
+                vm.page++;
+                vm.loadComments();
+            }
+        };
+
+        vm.prevPage = function() {
+            if (vm.page > 1) {
+                vm.page--;
+                vm.loadComments();
+            }
+        };
+
+    });
+
+angular.module("umbraco")
+    .filter('ceil', function() {
+        return function(input) {
+            return Math.ceil(input);
+        };
     });

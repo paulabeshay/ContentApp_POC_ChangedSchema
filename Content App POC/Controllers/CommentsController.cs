@@ -32,10 +32,10 @@ namespace Content_App_POC.Controllers
         }
 
         [HttpGet("content/{contentId}")]
-        public async Task<IActionResult> GetByContentId(int contentId)
+        public async Task<IActionResult> GetByContentId(int contentId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var comments = await _commentService.GetCommentsByContentIdAsync(contentId);
-            return Ok(comments);
+            var pagedResult = await _commentService.GetCommentsByContentIdPagedAsync(contentId, page, pageSize);
+            return Ok(pagedResult);
         }
 
         [HttpPost]

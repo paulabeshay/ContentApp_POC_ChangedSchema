@@ -51,5 +51,10 @@ namespace Content_App_POC.CommentsMgt
         {
             await _repository.CascadeStatusToChildrenAsync(parentId, newStatusId);
         }
+
+        public async Task<PaginatedResult<Comment>> GetCommentsByContentIdPagedAsync(int contentId, int page, int pageSize)
+        {
+            return await _repository.GetByContentIdPagedAsync(contentId, page, pageSize);
+        }
     }
 } 
