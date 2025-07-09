@@ -31,11 +31,18 @@ namespace Content_App_POC.Controllers
             return Ok(comment);
         }
 
-        [HttpGet("content/{contentId}")]
-        public async Task<IActionResult> GetByContentId(int contentId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [HttpGet("content/{contentId}/paged")]
+        public async Task<IActionResult> GetByContentIdPaged(int contentId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var pagedResult = await _commentService.GetCommentsByContentIdPagedAsync(contentId, page, pageSize);
             return Ok(pagedResult);
+        }
+
+        [HttpGet("content/{contentId}")]
+        public async Task<IActionResult> GetByContentId(int contentId)
+        {
+            var comments = await _commentService.GetCommentsByContentIdAsync(contentId);
+            return Ok(comments);
         }
 
         [HttpPost]

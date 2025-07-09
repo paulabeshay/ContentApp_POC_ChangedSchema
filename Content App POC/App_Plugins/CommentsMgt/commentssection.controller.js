@@ -35,9 +35,14 @@ angular.module("umbraco")
         // Fetch comments for the current content id
         vm.loadComments = function () {
             console.log("Loading comments for content ID: " + vm.CurrentNodeId);
-            $http.get("/api/comments/content/" + vm.CurrentNodeId + "?page=" + vm.page + "&pageSize=" + vm.pageSize)
+            $http.get("/api/comments/content/" + vm.CurrentNodeId + "/paged?page=" + vm.page + "&pageSize=" + vm.pageSize)
                 .then(function(response) {
-                    vm.Comments = response.data.items;
+                    // Only show parent comments that are shown in portal
+                    vm.Comments = response.data.items;//.map(function(parent) {
+                        // Only include replies that are shown in portal
+                    //    parent.Children = (parent.Children || []);
+                    //    return parent;
+                    //});
                     vm.totalCount = response.data.totalCount;
                     vm.page = response.data.page;
                     vm.pageSize = response.data.pageSize;

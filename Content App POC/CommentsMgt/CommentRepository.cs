@@ -23,6 +23,7 @@ namespace Content_App_POC.CommentsMgt
         {
             return await _context.Comments
                 .Where(c => c.ContentId == contentId && !c.IsDeleted)
+                .OrderByDescending(c => c.CreatedOn)
                 .ToListAsync();
         }
 
