@@ -24,6 +24,9 @@ angular.module("umbraco")
         vm.pageSize = 10;
         vm.totalCount = 0;
 
+        // Track collapsed state of replies for each parent comment
+        vm.collapsedReplies = {};
+
         // Fetch parent node alias
         contentResource.getById(editorState.current.parentId).then(function (parentNode) {
             vm.CurrentNodeParentAlias = parentNode.contentTypeAlias;
@@ -258,6 +261,25 @@ angular.module("umbraco")
                 vm.page--;
                 vm.loadComments();
             }
+        };
+
+        // Collapse all replies
+        vm.collapseAllReplies = function() {
+            vm.Comments.forEach(function(parent) {
+                vm.collapsedReplies[parent.id] = true;
+            });
+        };
+
+        // Expand all replies
+        vm.expandAllReplies = function() {
+            vm.Comments.forEach(function(parent) {
+                vm.collapsedReplies[parent.id] = false;
+            });
+        };
+
+        // Toggle replies for a specific parent comment
+        vm.toggleReplies = function(parentId) {
+            vm.collapsedReplies[parentId] = !vm.collapsedReplies[parentId];
         };
 
     });

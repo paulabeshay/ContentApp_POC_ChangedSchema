@@ -87,7 +87,6 @@
         }
         .comment-actions {
             margin-left: 7.2em;
-            display: inline-flex;
         }
         .comment-reply {
             margin-left: 3.5em;
@@ -200,6 +199,15 @@
         </umb-box-content>
         <umb-box-content>
             <h4 class="mb-3">Comments</h4>
+            <!-- Collapse/Expand All Replies Controls -->
+            <div class="mb-3" style="display: flex; gap: 10px;">
+                <button class="btn btn-outline-secondary btn-sm" ng-click="vm.collapseAllReplies()">
+                    <i class="fa fa-minus-square"></i> Collapse All Replies
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" ng-click="vm.expandAllReplies()">
+                    <i class="fa fa-plus-square"></i> Expand All Replies
+                </button>
+            </div>
             <!-- Add Comment Button (admin only) -->
             <div class="mb-3" ng-if="vm.CanAdminComments" style="margin-bottom: 15px; justify-self: right;">
                 <button class="btn btn-success btn-sm" ng-click="vm.openAddModal()">
@@ -261,40 +269,53 @@
                             <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(comment)"><i class="fa fa-trash"></i></button>
                         </div>
                     </div>
+                    <!-- Collapse/Expand Replies Button for this parent comment -->
+                    <div style="margin-left:3.2em; margin-bottom:0.5em;">
+                        <button class="btn btn-link btn-sm" ng-click="vm.toggleReplies(comment.id)" ng-if="comment.children && comment.children.length">
+                            <span ng-if="!vm.collapsedReplies[comment.id]">
+                                <i class="fa fa-minus-square"></i> Collapse Replies
+                            </span>
+                            <span ng-if="vm.collapsedReplies[comment.id]">
+                                <i class="fa fa-plus-square"></i> Expand Replies
+                            </span>
+                        </button>
+                    </div>
                     <!-- Replies -->
-                    <div ng-repeat="reply in comment.children" 
-                         style="padding: 15px; position:relative;" 
-                         class="card comments-section-card comment-reply p-3">
-                        <!-- Overlay if not shown in portal or parent not shown in portal or status is Pending/Rejected -->
-                        <div ng-if="!reply.shownInPortal || vm.isParentNotShownInPortal(reply) || reply.commentStatusId !== 2" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(220,220,220,0.7); z-index: 10; pointer-events: none; border-radius: 1.2em;"></div>
-                        <div class="comment-header" style="display: flex; align-items: center; justify-content: space-between;">
-                            <div style="display: flex; align-items: center;">
-                                <div class="comment-avatar">
-                                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <div ng-if="!vm.collapsedReplies[comment.id]">
+                        <div ng-repeat="reply in comment.children" 
+                             style="padding: 15px; position:relative;" 
+                             class="card comments-section-card comment-reply p-3">
+                            <!-- Overlay if not shown in portal or parent not shown in portal or status is Pending/Rejected -->
+                            <div ng-if="!reply.shownInPortal || vm.isParentNotShownInPortal(reply) || reply.commentStatusId !== 2" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(220,220,220,0.7); z-index: 10; pointer-events: none; border-radius: 1.2em;"></div>
+                            <div class="comment-header" style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="comment-avatar">
+                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                    </div>
+                                    <div>
+                                        <span class="comment-author">{{reply.createdBy}}</span><br/>
+                                        <span class="comment-date">{{reply.createdOn | date:'short'}} </span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="comment-author">{{reply.createdBy}}</span><br/>
-                                    <span class="comment-date">{{reply.createdOn | date:'short'}} </span>
+                                <div style="display: flex; align-items: center;">
+                                    <!-- Status Dropdown for Child Comment (moved to right end) -->
+                                    <select class="form-select form-select-sm me-2" style="margin-right: 5px;" ng-if="vm.CanAdminComments" ng-model="reply.commentStatusId" ng-options="opt.id as opt.label for opt in vm.statusOptions" ng-change="vm.updateCommentStatus(reply, false)" ng-disabled="!vm.isParentApproved(reply)"></select>
+                                    <!-- Toggle for ShownInPortal (admin only) -->
+                                    <div style="display: flex;" ng-if="vm.CanAdminComments">
+                                        <label class="switch">
+                                            <input type="checkbox" ng-model="reply.shownInPortal" ng-change="vm.toggleShownInPortal(reply)" ng-disabled="vm.isParentNotShownInPortal(reply) || vm.isShownInPortalDisabled(reply)">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <span style="margin-left:0.5em;">{{reply.shownInPortal ? 'Shown' : 'Hidden'}}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center;">
-                                <!-- Status Dropdown for Child Comment (moved to right end) -->
-                                <select class="form-select form-select-sm me-2" style="margin-right: 5px;" ng-if="vm.CanAdminComments" ng-model="reply.commentStatusId" ng-options="opt.id as opt.label for opt in vm.statusOptions" ng-change="vm.updateCommentStatus(reply, false)" ng-disabled="!vm.isParentApproved(reply)"></select>
-                                <!-- Toggle for ShownInPortal (admin only) -->
-                                <div style="display: flex;" ng-if="vm.CanAdminComments">
-                                    <label class="switch">
-                                        <input type="checkbox" ng-model="reply.shownInPortal" ng-change="vm.toggleShownInPortal(reply)" ng-disabled="vm.isParentNotShownInPortal(reply) || vm.isShownInPortalDisabled(reply)">
-                                        <span class="slider round"></span>
-                                    </label>
-                                    <span style="margin-left:0.5em;">{{reply.shownInPortal ? 'Shown' : 'Hidden'}}</span>
+                            <div class="comment-body d-flex flex-row align-items-start" style="display: flex;">
+                                <div class="comment-text" style="width: 65%;">{{reply.commentText}}</div>
+                                <div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="vm.CanAdminComments">
+                                    <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)"><i class="fa fa-edit"></i></button>
+                                    <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(reply)"><i class="fa fa-trash"></i></button>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="comment-body d-flex flex-row align-items-start" style="display: flex;">
-                            <div class="comment-text" style="width: 65%;">{{reply.commentText}}</div>
-                            <div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="vm.CanAdminComments">
-                                <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)"><i class="fa fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(reply)"><i class="fa fa-trash"></i></button>
                             </div>
                         </div>
                     </div>
