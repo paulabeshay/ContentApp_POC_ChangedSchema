@@ -7,6 +7,17 @@
         var cmsDisplayField = document.querySelector('[data-element="cMSDisplay"]');
         var portalDisplayField = document.querySelector('[data-element="portalDisplay"]');
 
+        // Disable/enable portalDisplay based on cMSDisplay and user group
+        if (!isCommentsAdmin) {
+            document.getElementById('cMSDisplay').disabled = '"disabled"';
+            document.getElementById('cMSDisplay').style.opacity = '0.4';
+            document.getElementById('cMSDisplay').style.pointerEvents = 'none';
+
+            document.getElementById('portalDisplay').disabled = '"disabled"';
+            document.getElementById('portalDisplay').style.opacity = '0.4';
+            document.getElementById('portalDisplay').style.pointerEvents = 'none';
+        }
+
         if (!cmsDisplayField || !portalDisplayField) {
             return;
         }
@@ -24,10 +35,6 @@
             var cmsDisplayValue = cmsDisplayInput.type === 'checkbox' ? cmsDisplayInput.checked : cmsDisplayInput.value;
             var isCMSDisplayEnabled = cmsDisplayInput.type === 'checkbox' ? cmsDisplayValue : cmsDisplayValue === '1';
 
-            // Disable/enable portalDisplay based on cMSDisplay and user group
-            portalDisplayInput.disabled = !isCMSDisplayEnabled || !isCommentsAdmin;
-            cmsDisplayInput.disabled = !isCommentsAdmin;
-
             // If cMSDisplay is disabled, uncheck portalDisplay
             if (!isCMSDisplayEnabled) {
                 portalDisplayInput.checked = false;
@@ -37,26 +44,26 @@
             }
 
             // Add visual indication
-            var portalDisplayContainer = portalDisplayField.closest('.umb-property');
-            var cmsDisplayContainer = cmsDisplayField.closest('.umb-property');
-            if (portalDisplayContainer) {
-                if (!isCMSDisplayEnabled || !isCommentsAdmin) {
-                    portalDisplayContainer.classList.add('umb-property--disabled');
-                    portalDisplayContainer.style.opacity = '0.6';
-                } else {
-                    portalDisplayContainer.classList.remove('umb-property--disabled');
-                    portalDisplayContainer.style.opacity = '1';
-                }
-            }
-            if (cmsDisplayContainer) {
-                if (!isCommentsAdmin) {
-                    cmsDisplayContainer.classList.add('umb-property--disabled');
-                    cmsDisplayContainer.style.opacity = '0.6';
-                } else {
-                    cmsDisplayContainer.classList.remove('umb-property--disabled');
-                    cmsDisplayContainer.style.opacity = '1';
-                }
-            }
+            //var portalDisplayContainer = portalDisplayField.closest('.umb-property');
+            //var cmsDisplayContainer = cmsDisplayField.closest('.umb-property');
+            //if (portalDisplayContainer) {
+            //    if (!isCMSDisplayEnabled || !isCommentsAdmin) {
+            //        portalDisplayContainer.classList.add('umb-property--disabled');
+            //        portalDisplayContainer.style.opacity = '0.6';
+            //    } else {
+            //        portalDisplayContainer.classList.remove('umb-property--disabled');
+            //        portalDisplayContainer.style.opacity = '1';
+            //    }
+            //}
+            //if (cmsDisplayContainer) {
+            //    if (!isCommentsAdmin) {
+            //        cmsDisplayContainer.classList.add('umb-property--disabled');
+            //        cmsDisplayContainer.style.opacity = '0.6';
+            //    } else {
+            //        cmsDisplayContainer.classList.remove('umb-property--disabled');
+            //        cmsDisplayContainer.style.opacity = '1';
+            //    }
+            //}
         }
 
         // Add event listener to cMSDisplay
