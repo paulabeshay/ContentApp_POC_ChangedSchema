@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="App_Plugins\CommentsMgt\commentssection.html" />
+    <Content Include="App_Plugins\PortalDisplayDependency\PortalDisplayDependency.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommentsMgt.Application\CommentsMgt.Application.csproj" />
+    <ProjectReference Include="..\CommentsMgt.Domain\CommentsMgt.Domain.csproj" />
+    <ProjectReference Include="..\CommentsMgt.DTO\CommentsMgt.DTOs.csproj" />
+  </ItemGroup>
+
+</Project>

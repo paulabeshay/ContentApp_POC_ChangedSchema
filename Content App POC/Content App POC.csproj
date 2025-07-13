@@ -20,15 +20,28 @@
 	<ItemGroup>
 		<!-- Opt-in to app-local ICU to ensure consistent globalization APIs across different platforms -->
 		<PackageReference Include="Microsoft.ICU.ICU4C.Runtime" Version="72.1.0.3" />
+		<PackageReference Include="uSync" Version="13.2.7" />
 		<RuntimeHostConfigurationOption Include="System.Globalization.AppLocalIcu" Value="72.1.0.3" Condition="$(RuntimeIdentifier.StartsWith('linux')) or $(RuntimeIdentifier.StartsWith('win')) or ('$(RuntimeIdentifier)' == '' and !$([MSBuild]::IsOSPlatform('osx')))" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="App_Plugins\CommentsMgt\commentssection.controller.js" />
-		<None Include="app_plugins\commentsmgt\Package.manifest" />
+		<None Include="App_Plugins\CommentsMgt\Package.manifest" />
 		<None Include="App_Plugins\PortalDisplayDependency\PortalDisplayDependency.js" />
 		<None Include="app_plugins\wordcounter\Package.manifest" />
 		<None Include="App_Plugins\WordCounter\wordcounter.controller.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="CommentsMgt\" />
+	  <Folder Include="Controllers\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CommentsMgt.API\CommentsMgt.API.csproj" />
+	  <ProjectReference Include="..\CommentsMgt.Application\CommentsMgt.Application.csproj" />
+	  <ProjectReference Include="..\CommentsMgt.Domain\CommentsMgt.Domain.csproj" />
+	  <ProjectReference Include="..\CommentsMgt.Infra\CommentsMgt.Infra.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>
