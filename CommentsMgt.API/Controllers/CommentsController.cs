@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Content_App_POC.CommentsMgt;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Content_App_POC.Controllers
 {
@@ -10,10 +11,12 @@ namespace Content_App_POC.Controllers
     public class CommentsController : ControllerBase
     {
         private readonly ICommentService _commentService;
+        private readonly IConfiguration _configuration;
 
-        public CommentsController(ICommentService commentService)
+        public CommentsController(ICommentService commentService, IConfiguration configuration)
         {
             _commentService = commentService;
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -82,6 +85,14 @@ namespace Content_App_POC.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpGet("initial-config")]
+        public IActionResult GetInitialConfig()
+        {
+            int statusId = _configuration.GetValue<int>("CommentsManagement:InitialCommentStatusId", 1);
+            bool shownInPortal = _configuration.GetValue<int>("CommentsManagement:InitialVisbilityStatus", 1) == 1;
+            return Ok(new { initialCommentStatusId = statusId, initialVisibilityStatus = shownInPortal });
         }
     }
 } 

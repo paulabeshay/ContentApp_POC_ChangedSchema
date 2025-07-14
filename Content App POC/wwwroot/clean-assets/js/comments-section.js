@@ -104,7 +104,8 @@
                             createdBy: userName,
                             modifiedBy: userName,
                             contentParentAlias: parentAlias,
-                            commentStatusId: 1
+                            commentStatusId: initialCommentStatusId,
+                            shownInPortal: (initialCommentStatusId === 2) ? initialVisibilityStatus : false
                         })
                     }).then(() => {
                         showNotification('Comment added and may wait approval!');
@@ -139,7 +140,8 @@
                                     createdBy: userName,
                                     modifiedBy: userName,
                                     contentParentAlias: parentAlias,
-                                    commentStatusId: 1
+                                    commentStatusId: initialCommentStatusId,
+                                    shownInPortal: (initialCommentStatusId === 2) ? initialVisibilityStatus : false
                                 })
                             }).then(() => {
                                 showNotification('Reply added and may wait approval!');
@@ -155,6 +157,19 @@
                 });
             });
     }
+
+    let initialCommentStatusId = 1;
+    let initialVisibilityStatus = false;
+    fetch('/api/comments/initial-config')
+        .then(r => r.json())
+        .then(data => {
+            if (data && data.initialCommentStatusId) {
+                initialCommentStatusId = data.initialCommentStatusId;
+            }
+            if (data && typeof data.initialVisibilityStatus !== 'undefined') {
+                initialVisibilityStatus = data.initialVisibilityStatus;
+            }
+        });
 
     // Optionally, set current content id and user name from server-side
     window.currentContentId = window.currentContentId || 0;

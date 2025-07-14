@@ -23,6 +23,16 @@ angular.module("umbraco")
         vm.page = 1;
         vm.pageSize = 10;
         vm.totalCount = 0;
+        vm.initialCommentStatusId = 1;
+        vm.initialVisibilityStatus = false;
+        $http.get('/api/comments/initial-config').then(function(response) {
+            if (response.data && response.data.initialCommentStatusId) {
+                vm.initialCommentStatusId = response.data.initialCommentStatusId;
+            }
+            if (response.data && typeof response.data.initialVisibilityStatus !== 'undefined') {
+                vm.initialVisibilityStatus = response.data.initialVisibilityStatus;
+            }
+        });
 
         // Track collapsed state of replies for each parent comment
         vm.collapsedReplies = {};
@@ -127,7 +137,8 @@ angular.module("umbraco")
                 contentId: vm.CurrentNodeId,
                 commentText: vm.newCommentText,
                 contentParentAlias: vm.CurrentNodeParentAlias,
-                commentStatusId: 1,
+                commentStatusId: vm.initialCommentStatusId,
+                shownInPortal: (vm.initialCommentStatusId === 2) ? vm.initialVisibilityStatus : false,
                 createdBy: vm.UserName,
                 modifiedBy: vm.UserName
             };
@@ -167,7 +178,8 @@ angular.module("umbraco")
                 commentText: vm.replyText,
                 parentId: vm.replyToComment.id,
                 contentParentAlias: vm.CurrentNodeParentAlias,
-                commentStatusId: 1,
+                commentStatusId: vm.initialCommentStatusId,
+                shownInPortal: (vm.initialCommentStatusId === 2) ? vm.initialVisibilityStatus : false,
                 createdBy: vm.UserName,
                 modifiedBy: vm.UserName
             };
