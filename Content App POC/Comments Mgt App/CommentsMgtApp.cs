@@ -16,11 +16,25 @@ namespace Content_App_POC.Comments_Mgt
 
     public class CommentsMgtApp : IContentAppFactory
     {
+        private readonly string _adminGroupName;
+        private readonly string _viewerGroupName;
+
+        public CommentsMgtApp()
+        {
+            // Fallback for DI-less instantiation (should not be used in production)
+            _adminGroupName = "commentsadmin";
+            _viewerGroupName = "commentsviewer";
+        }
+
+        public CommentsMgtApp(Microsoft.Extensions.Configuration.IConfiguration config)
+        {
+            _adminGroupName = (config["CommentsManagement:UserGroups:AdminGroupName"] ?? "commentsadmin").ToLowerInvariant();
+            _viewerGroupName = (config["CommentsManagement:UserGroups:ViewerGroupName"] ?? "commentsviewer").ToLowerInvariant();
+        }
+
         public ContentApp? GetContentAppFor(object source, IEnumerable<IReadOnlyUserGroup> userGroups)
         {
-            // Can implement some logic with userGroups if needed
-            // Allowing us to display the content app with some restrictions for certain groups
-            if (userGroups.All(x => x.Alias.ToLowerInvariant() != "commentsadmin" && x.Alias.ToLowerInvariant() != "commentsviewer"))
+            if (userGroups.All(x => x.Alias.ToLowerInvariant() != _adminGroupName && x.Alias.ToLowerInvariant() != _viewerGroupName))
                 return null;
 
             // Only show app on content items

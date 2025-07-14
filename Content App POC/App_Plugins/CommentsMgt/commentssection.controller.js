@@ -67,12 +67,23 @@ angular.module("umbraco")
 
         vm.loadComments();
 
+        vm.adminGroupName = 'commentsadmin';
+        vm.viewerGroupName = 'commentsviewer';
+        $http.get('/api/comments/user-groups').then(function(response) {
+            if (response.data && response.data.adminGroupName) {
+                vm.adminGroupName = response.data.adminGroupName.toLowerCase();
+            }
+            if (response.data && response.data.viewerGroupName) {
+                vm.viewerGroupName = response.data.viewerGroupName.toLowerCase();
+            }
+        });
+
         function checkCommentsAdmin(userGroups) {
             if (!userGroups) return false;
             return userGroups.some(function (g) {
-                if (typeof g === 'string') return g.toLowerCase() === 'commentsadmin';
-                if (g && g.name) return g.name.toLowerCase() === 'commentsadmin';
-                if (g && g.alias) return g.alias.toLowerCase() === 'commentsadmin';
+                if (typeof g === 'string') return g.toLowerCase() === vm.adminGroupName;
+                if (g && g.name) return g.name.toLowerCase() === vm.adminGroupName;
+                if (g && g.alias) return g.alias.toLowerCase() === vm.adminGroupName;
                 return false;
             });
         }

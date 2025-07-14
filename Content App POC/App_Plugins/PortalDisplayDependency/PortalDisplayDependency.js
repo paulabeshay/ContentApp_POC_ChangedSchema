@@ -80,13 +80,23 @@
         updatePortalDisplayState();
     }
 
+    var adminGroupName = 'commentsadmin';
+    var viewerGroupName = 'commentsviewer';
+    // Fetch group names from API
+    fetch('/api/comments/user-groups').then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        if (data && data.adminGroupName) adminGroupName = data.adminGroupName.toLowerCase();
+        if (data && data.viewerGroupName) viewerGroupName = data.viewerGroupName.toLowerCase();
+    });
+
     // Helper to check if user is in CommentsAdmin group
     function isUserCommentsAdmin(user) {
         if (!user || !user.userGroups) return false;
         return user.userGroups.some(function (g) {
-            if (typeof g === 'string') return g.toLowerCase() === 'commentsadmin';
-            if (g && g.name) return g.name.toLowerCase() === 'commentsadmin';
-            if (g && g.alias) return g.alias.toLowerCase() === 'commentsadmin';
+            if (typeof g === 'string') return g.toLowerCase() === adminGroupName;
+            if (g && g.name) return g.name.toLowerCase() === adminGroupName;
+            if (g && g.alias) return g.alias.toLowerCase() === adminGroupName;
             return false;
         });
     }

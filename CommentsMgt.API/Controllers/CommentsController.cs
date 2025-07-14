@@ -94,5 +94,13 @@ namespace Content_App_POC.Controllers
             bool shownInPortal = _configuration.GetValue<int>("CommentsManagement:InitialVisbilityStatus", 1) == 1;
             return Ok(new { initialCommentStatusId = statusId, initialVisibilityStatus = shownInPortal });
         }
+
+        [HttpGet("user-groups")]
+        public IActionResult GetUserGroups()
+        {
+            var adminGroup = _configuration["CommentsManagement:UserGroups:AdminGroupName"] ?? "CommentsAdmin";
+            var viewerGroup = _configuration["CommentsManagement:UserGroups:ViewerGroupName"] ?? "CommentsViewer";
+            return Ok(new { adminGroupName = adminGroup, viewerGroupName = viewerGroup });
+        }
     }
 } 
