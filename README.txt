@@ -36,3 +36,20 @@ and use it in every needed html view as
 6- Add CommentsMgtApp.cs file in New Folder (Comment Mgt App)
 7- Add comments-section.js file in wwwroot folder => clean-assets => js
 8- Add PortalDisplayDependency.cs
+9- Add this section to appsettings file 
+"ConnectionStrings": {
+    "CommentsMgt": "Server=10.19.4.4;Database=CommentsMgt;User Id=UmbracoTemplateUser;Password=Dev@123456;Trusted_Connection=True;TrustServerCertificate=True;"
+    //"CommentsMgt": "Server=(localdb)\\MSSQLLocalDB;Database=CommentsMgt;TrustServerCertificate=True;"
+  },
+  "CommentsManagement": {
+    "InitialCommentStatusId": 3, // 2 = Approved
+    "InitialVisbilityStatus": 1, // will be read only if InitialCommentStatusId = 2
+    "UserGroups": {
+      "AdminGroupName": "CommentsAdmin",
+      "ViewerGroupName": "CommentsViewer"
+    },
+    "CommentsMgtToggles": {
+      "CMS": "cMSDisplay",
+      "Portal": "portalDisplay"
+    }
+  }
