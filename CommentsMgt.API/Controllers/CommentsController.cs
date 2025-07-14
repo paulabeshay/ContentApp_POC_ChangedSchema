@@ -100,7 +100,14 @@ namespace Content_App_POC.Controllers
         {
             var adminGroup = _configuration["CommentsManagement:UserGroups:AdminGroupName"] ?? "CommentsAdmin";
             var viewerGroup = _configuration["CommentsManagement:UserGroups:ViewerGroupName"] ?? "CommentsViewer";
-            return Ok(new { adminGroupName = adminGroup, viewerGroupName = viewerGroup });
+            var cmsToggle = _configuration["CommentsManagement:CommentsMgtToggles:CMS"] ?? "cMSDisplay";
+            var portalToggle = _configuration["CommentsManagement:CommentsMgtToggles:Portal"] ?? "portalDisplay";
+            return Ok(new {
+                adminGroupName = adminGroup,
+                viewerGroupName = viewerGroup,
+                cmsToggle = cmsToggle,
+                portalToggle = portalToggle
+            });
         }
     }
 } 

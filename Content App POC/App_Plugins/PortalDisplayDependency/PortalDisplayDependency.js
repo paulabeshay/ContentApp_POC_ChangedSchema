@@ -1,28 +1,42 @@
 ﻿(function () {
     'use strict';
 
+    var adminGroupName = 'commentsadmin';
+    var viewerGroupName = 'commentsviewer';
+    var cmsToggle = 'cMSDisplay';
+    var portalToggle = 'portalDisplay';
+    // Fetch group names and toggle names from API
+    fetch('/api/comments/user-groups').then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        if (data && data.adminGroupName) adminGroupName = data.adminGroupName.toLowerCase();
+        if (data && data.viewerGroupName) viewerGroupName = data.viewerGroupName.toLowerCase();
+        if (data && data.cmsToggle) cmsToggle = data.cmsToggle;
+        if (data && data.portalToggle) portalToggle = data.portalToggle;
+    });
+
     // Function to handle the dependency between cMSDisplay and portalDisplay
     function handlePortalDisplayDependency(isCommentsAdmin) {
         // Find the cMSDisplay field
-        var cmsDisplayField = document.querySelector('[data-element="cMSDisplay"]');
-        var portalDisplayField = document.querySelector('[data-element="portalDisplay"]');
+        var cmsDisplayField = document.querySelector('[data-element="' + cmsToggle + '"]');
+        var portalDisplayField = document.querySelector('[data-element="' + portalToggle + '"]');
 
         // Disable/enable portalDisplay based on cMSDisplay and user group
-        if (document.getElementById('cMSDisplay') && document.getElementById('portalDisplay'))
+        if (document.getElementById(cmsToggle) && document.getElementById(portalToggle))
         {
             if (!isCommentsAdmin) {
-                document.getElementById('cMSDisplay').disabled = '"disabled"';
-                document.getElementById('cMSDisplay').style.opacity = '0.4';
-                document.getElementById('cMSDisplay').style.pointerEvents = 'none';
+                document.getElementById(cmsToggle).disabled = 'disabled';
+                document.getElementById(cmsToggle).style.opacity = '0.4';
+                document.getElementById(cmsToggle).style.pointerEvents = 'none';
 
-                document.getElementById('portalDisplay').disabled = '"disabled"';
-                document.getElementById('portalDisplay').style.opacity = '0.4';
-                document.getElementById('portalDisplay').style.pointerEvents = 'none';
+                document.getElementById(portalToggle).disabled = 'disabled';
+                document.getElementById(portalToggle).style.opacity = '0.4';
+                document.getElementById(portalToggle).style.pointerEvents = 'none';
             }
         }
         else
         {
-            console.error("Element with data-element='cMSDisplay' and 'portalDisplay' not found.");
+            console.error("Element with data-element='" + cmsToggle + "' and '" + portalToggle + "' not found.");
         }
 
         if (!cmsDisplayField || !portalDisplayField) {
@@ -79,16 +93,6 @@
         // Initial state update
         updatePortalDisplayState();
     }
-
-    var adminGroupName = 'commentsadmin';
-    var viewerGroupName = 'commentsviewer';
-    // Fetch group names from API
-    fetch('/api/comments/user-groups').then(function(response) {
-        return response.json();
-    }).then(function(data) {
-        if (data && data.adminGroupName) adminGroupName = data.adminGroupName.toLowerCase();
-        if (data && data.viewerGroupName) viewerGroupName = data.viewerGroupName.toLowerCase();
-    });
 
     // Helper to check if user is in CommentsAdmin group
     function isUserCommentsAdmin(user) {
