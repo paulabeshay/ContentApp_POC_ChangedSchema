@@ -8,14 +8,21 @@
         var portalDisplayField = document.querySelector('[data-element="portalDisplay"]');
 
         // Disable/enable portalDisplay based on cMSDisplay and user group
-        if (!isCommentsAdmin) {
-            document.getElementById('cMSDisplay').disabled = '"disabled"';
-            document.getElementById('cMSDisplay').style.opacity = '0.4';
-            document.getElementById('cMSDisplay').style.pointerEvents = 'none';
+        if (document.getElementById('cMSDisplay') && document.getElementById('portalDisplay'))
+        {
+            if (!isCommentsAdmin) {
+                document.getElementById('cMSDisplay').disabled = '"disabled"';
+                document.getElementById('cMSDisplay').style.opacity = '0.4';
+                document.getElementById('cMSDisplay').style.pointerEvents = 'none';
 
-            document.getElementById('portalDisplay').disabled = '"disabled"';
-            document.getElementById('portalDisplay').style.opacity = '0.4';
-            document.getElementById('portalDisplay').style.pointerEvents = 'none';
+                document.getElementById('portalDisplay').disabled = '"disabled"';
+                document.getElementById('portalDisplay').style.opacity = '0.4';
+                document.getElementById('portalDisplay').style.pointerEvents = 'none';
+            }
+        }
+        else
+        {
+            console.error("Element with data-element='cMSDisplay' and 'portalDisplay' not found.");
         }
 
         if (!cmsDisplayField || !portalDisplayField) {

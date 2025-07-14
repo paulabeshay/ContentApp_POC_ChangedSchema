@@ -6,6 +6,7 @@
 		<RootNamespace>Content_App_POC</RootNamespace>
 	</PropertyGroup>
 	<ItemGroup>
+		<Content Include="App_Plugins\CommentsMgt\commentssection.css" />
 		<Content Include="App_Plugins\CommentsMgt\commentssection.html" />
 		<Content Include="App_Plugins\PortalDisplayDependency\PortalDisplayDependency.css" />
 		<Content Include="App_Plugins\WordCounter\wordcounter.html" />

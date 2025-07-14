@@ -1,207 +1,8 @@
-﻿<div ng-controller="My.CommentsSectionApp as vm">
-    <style>
-        .comments-section-card {
-            margin-bottom: 1.2rem;
-            border-radius: 1.2em;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            border: none;
-            transition: box-shadow 0.2s;
-        }
-        .comments-section-card:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.13);
-        }
-        .comment-author {
-            font-weight: 600;
-            color: #1877f2;
-        }
-        .comment-date {
-            font-size: 0.9em;
-            color: #888;
-        }
-        .comment-text {
-            margin: 0.5em 0 0.5em 0;
-            font-size: 1.08em;
-            line-height: 1.5;
-        }
-        .comment-actions button {
-            margin-right: 0.5em;
-            font-size: 0.95em;
-        }
-        .add-comment-form textarea {
-            resize: vertical;
-            border-radius: 1.2em;
-            padding: 0.7em 1em;
-            border: 1px solid #e4e6eb;
-            background: #f0f2f5;
-        }
-        .add-comment-form {
-            background: #fff;
-            border-radius: 1.2em;
-            padding: 1em 1.5em 1em 1.5em;
-            margin-bottom: 1.5em;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-            display: flex;
-            align-items: flex-start;
-        }
-        .add-comment-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: #1877f2;
-            font-weight: bold;
-            font-size: 1.3em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1em;
-            flex-shrink: 0;
-        }
-        .add-comment-input {
-            flex: 1;
-        }
-        .comment-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: #1877f2;
-            font-weight: bold;
-            font-size: 1.1em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 0.9em;
-            flex-shrink: 0;
-        }
-        .comment-header {
-            display: flex;
-            align-items: center;
-        }
-        .comment-body {
-            margin-left: 3.2em;
-        }
-        .comment-divider {
-            border-top: 1px solid #f0f2f5;
-            margin: 0.7em 0 0.2em 0;
-        }
-        .comment-actions {
-            margin-left: 7.2em;
-        }
-        .comment-reply {
-            margin-left: 3.5em;
-            background: #f7fafd;
-        }
-        .custom-modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1050;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .custom-modal-dialog {
-            background: #fff;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-            outline: none;
-        }
-        .custom-modal-content {
-            outline: none;
-        }
-        .modal-header {
-            outline: none;
-        }
-        .modal-body {
-            outline: none;
-        }
-        .modal-footer {
-            outline: none;
-        }
-        .reply-button {
-            margin-left: 0.5em;
-            font-size: 0.9em;
-            color: #1877f2;
-            background: none;
-            border: none;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        .reply-button:hover {
-            color: #0d5aa7;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 22px;
-        }
-        .switch input {display:none;}
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 22px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #1877f2;
-        }
-        input:checked + .slider:before {
-            transform: translateX(18px);
-        }
-        .slider.round {
-            border-radius: 22px;
-        }
-        
-        /* Status-based border styling */
-        .comment-status-pending {
-            border: 3px solid #ffc107 !important; /* Yellow border for pending */
-        }
-        
-        .comment-status-approved {
-            border: 3px solid #28a745 !important; /* Green border for approved */
-        }
-        
-        .comment-status-rejected {
-            border: 3px solid #dc3545 !important; /* Red border for rejected */
-        }
-        .replies-scrollable {
-            max-height: 250px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-    </style>
-    <umb-box>
-        <umb-box-header title="Current Node and User Info"></umb-box-header>
-        <umb-box-content>
-            <!--<div ng-repeat="(key, value) in vm.propertyWordCount">
-                <p>Property: <span style="font-style:italic">{{key}}</span>, amount of words: <span style="font-style:italic">{{value}}</span> </p>
-            </div>
-            <hr />-->
+﻿<link rel="stylesheet" href="/App_Plugins/CommentsMgt/commentssection.css" />
 
-            <ul class="list-unstyled mb-4">
-                <li>Current node id: <b>{{vm.CurrentNodeId}}</b></li>
-                <li>Current node alias: <b>{{vm.CurrentNodeAlias}}</b></li>
-                <li>Current user: <b>{{vm.UserName}}</b></li>
-                <li>Current user groups: <b>{{vm.UserGroups}}</b></li>
-            </ul>
-        </umb-box-content>
+<div ng-controller="My.CommentsSectionApp as vm">
+    <umb-box>
+        <umb-box-header title="Comments"></umb-box-header>
         <umb-box-content>
             <h4 class="mb-3">Comments</h4>
             <!-- Collapse/Expand All Replies Controls -->
@@ -239,7 +40,7 @@
             </div>
             <div class="comments-list">
                 <div ng-repeat="comment in vm.Comments"
-                     class="card comments-section-card p-3" 
+                     class="card comments-section-card p-3"
                      style="padding:15px; position:relative;">
                     <!-- Overlay if not shown in portal or status is Pending/Rejected -->
                     <div ng-if="!comment.shownInPortal || comment.commentStatusId !== 2" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(220,220,220,0.7);z-index:10;pointer-events:none;border-radius:1.2em;"></div>
@@ -249,7 +50,7 @@
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </div>
                             <div>
-                                <span class="comment-author">{{comment.createdBy}}</span><br/>
+                                <span class="comment-author">{{comment.createdBy}}</span><br />
                                 <span class="comment-date">{{comment.createdOn | date:'short'}}</span>
                             </div>
                         </div>
@@ -288,8 +89,8 @@
                     <!-- Replies -->
                     <div ng-if="!vm.collapsedReplies[comment.id]">
                         <div class="replies-scrollable">
-                            <div ng-repeat="reply in comment.children" 
-                                 style="padding: 15px; position:relative;" 
+                            <div ng-repeat="reply in comment.children"
+                                 style="padding: 15px; position:relative;"
                                  class="card comments-section-card comment-reply p-3">
                                 <!-- Overlay if not shown in portal or parent not shown in portal or status is Pending/Rejected -->
                                 <div ng-if="!reply.shownInPortal || vm.isParentNotShownInPortal(reply) || reply.commentStatusId !== 2" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(220,220,220,0.7); z-index: 10; pointer-events: none; border-radius: 1.2em;"></div>
@@ -299,7 +100,7 @@
                                             <i class="fa fa-user" aria-hidden="true"></i>
                                         </div>
                                         <div>
-                                            <span class="comment-author">{{reply.createdBy}}</span><br/>
+                                            <span class="comment-author">{{reply.createdBy}}</span><br />
                                             <span class="comment-date">{{reply.createdOn | date:'short'}} </span>
                                         </div>
                                     </div>
