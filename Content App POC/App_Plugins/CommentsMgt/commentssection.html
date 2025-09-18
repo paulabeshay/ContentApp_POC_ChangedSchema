@@ -7,16 +7,16 @@
             <h4 class="mb-3">Comments</h4>
             <!-- Collapse/Expand All Replies Controls -->
             <div class="mb-3" style="display: flex; gap: 10px;">
-                <button class="btn btn-outline-secondary btn-sm" ng-click="vm.collapseAllReplies()">
+                <button class="btn btn-outline-secondary btn-sm" type="button" ng-click="vm.collapseAllReplies()">
                     <i class="fa fa-minus-square"></i> Collapse All Replies
                 </button>
-                <button class="btn btn-outline-secondary btn-sm" ng-click="vm.expandAllReplies()">
+                <button class="btn btn-outline-secondary btn-sm" type="button" ng-click="vm.expandAllReplies()">
                     <i class="fa fa-plus-square"></i> Expand All Replies
                 </button>
             </div>
             <!-- Add Comment Button (admin only) -->
             <div class="mb-3" ng-if="vm.CanAdminComments" style="margin-bottom: 15px; justify-self: right;">
-                <button class="btn btn-success btn-sm" ng-click="vm.openAddModal()">
+                <button class="btn btn-success btn-sm" type="button" ng-click="vm.openAddModal()">
                     <i class="fa fa-plus"></i> Add Comment
                 </button>
             </div>
@@ -32,8 +32,8 @@
                             <textarea ng-model="vm.newCommentText" style="width: 100%;" class="form-control" rows="3" placeholder="Write your comment..."></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" ng-click="vm.closeAddModal()">Cancel</button>
-                            <button class="btn btn-primary" ng-click="vm.addComment()">Add</button>
+                            <button type="button" class="btn btn-secondary" ng-click="vm.closeAddModal()">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="vm.addComment()">Add</button>
                         </div>
                     </div>
                 </div>
@@ -70,14 +70,14 @@
                     <div class="comment-body d-flex flex-row align-items-start" style="display: flex;">
                         <div class="comment-text" style="width: 58%;">{{comment.commentText}}</div>
                         <div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="vm.CanAdminComments">
-                            <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openReplyModal(comment)"><i class="fa fa-reply"></i></button>
-                            <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(comment)"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(comment)"><i class="fa fa-trash"></i></button>
+                            <button type="button" class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openReplyModal(comment)"><i class="fa fa-reply"></i></button>
+                            <button type="button" class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(comment)"><i class="fa fa-edit"></i></button>
+                            <button type="button" class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(comment)"><i class="fa fa-trash"></i></button>
                         </div>
                     </div>
                     <!-- Collapse/Expand Replies Button for this parent comment -->
                     <div style="margin-left:3.2em; margin-bottom:0.5em;">
-                        <button class="btn btn-link btn-sm" ng-click="vm.toggleReplies(comment.id)" ng-if="comment.children && comment.children.length">
+                        <button type="button" class="btn btn-link btn-sm" ng-click="vm.toggleReplies(comment.id)" ng-if="comment.children && comment.children.length">
                             <span ng-if="!vm.collapsedReplies[comment.id]">
                                 <i class="fa fa-minus-square"></i> Collapse Replies
                             </span>
@@ -120,8 +120,8 @@
                                 <div class="comment-body d-flex flex-row align-items-start" style="display: flex;">
                                     <div class="comment-text" style="width: 65%;">{{reply.commentText}}</div>
                                     <div class="comment-actions d-flex flex-row justify-content-end ms-auto" ng-if="vm.CanAdminComments">
-                                        <button class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)"><i class="fa fa-edit"></i></button>
-                                        <button class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(reply)"><i class="fa fa-trash"></i></button>
+                                        <button type="button" class="btn btn-outline-primary btn-sm me-2" ng-click="vm.openEditModal(reply)"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-danger btn-sm" ng-click="vm.openDeleteModal(reply)"><i class="fa fa-trash"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -132,9 +132,9 @@
                 <div ng-if="!vm.Comments.length" class="alert alert-info mt-3">No comments yet. Be the first to comment!</div>
             </div>
             <div class="pagination-controls" ng-if="vm.totalCount > vm.pageSize" style="margin-top: 20px; display: flex; align-items: center; justify-content: center;">
-                <button class="btn btn-secondary btn-sm" ng-click="vm.prevPage()" ng-disabled="vm.page === 1">Prev</button>
+                <button type="button" class="btn btn-secondary btn-sm" ng-click="vm.prevPage()" ng-disabled="vm.page === 1">Prev</button>
                 <span style="margin: 0 10px;">Page {{vm.page}} of {{(vm.totalCount / vm.pageSize) | ceil}}</span>
-                <button class="btn btn-secondary btn-sm" ng-click="vm.nextPage()" ng-disabled="vm.page * vm.pageSize >= vm.totalCount">Next</button>
+                <button type="button" class="btn btn-secondary btn-sm" ng-click="vm.nextPage()" ng-disabled="vm.page * vm.pageSize >= vm.totalCount">Next</button>
             </div>
             <!-- Edit Modal -->
             <div ng-if="vm.showEditModal && vm.CanAdminComments" class="custom-modal-overlay">
@@ -148,8 +148,8 @@
                             <textarea ng-model="vm.editingCommentText" style="width: 100%;" class="form-control" rows="3"></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" ng-click="vm.closeEditModal()">Cancel</button>
-                            <button class="btn btn-primary" ng-click="vm.saveEdit()">Save</button>
+                            <button type="button" class="btn btn-secondary" ng-click="vm.closeEditModal()">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="vm.saveEdit()">Save</button>
                         </div>
                     </div>
                 </div>
@@ -167,8 +167,8 @@
                             <div class="border p-2 bg-light">{{vm.modalComment && vm.modalComment.commentText}}</div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" ng-click="vm.closeDeleteModal()">Cancel</button>
-                            <button class="btn btn-danger" ng-click="vm.confirmDelete()">Delete</button>
+                            <button type="button" class="btn btn-secondary" ng-click="vm.closeDeleteModal()">Cancel</button>
+                            <button type="button" class="btn btn-danger" ng-click="vm.confirmDelete()">Delete</button>
                         </div>
                     </div>
                 </div>
@@ -189,8 +189,8 @@
                             <textarea ng-model="vm.replyText" class="form-control" style="width: 100%;" rows="3" placeholder="Write your reply..."></textarea>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" ng-click="vm.closeReplyModal()">Cancel</button>
-                            <button class="btn btn-primary" ng-click="vm.submitReply()">Reply</button>
+                            <button type="button" class="btn btn-secondary" ng-click="vm.closeReplyModal()">Cancel</button>
+                            <button type="button" class="btn btn-primary" ng-click="vm.submitReply()">Reply</button>
                         </div>
                     </div>
                 </div>
