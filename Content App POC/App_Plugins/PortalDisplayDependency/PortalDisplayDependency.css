@@ -1,5 +1,5 @@
-﻿.umb-property--disabled {
-    Add commentMore actions pointer-events: none;
+.umb-property--disabled {
+    pointer-events: none;
     opacity: 0.6;
 }
 

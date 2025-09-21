@@ -1,0 +1,8 @@
+{
+    "javascript": [
+        "~/App_Plugins/PortalDisplayDependency/PortalDisplayDependency.js"
+    ],
+    "css": [
+        "~/App_Plugins/PortalDisplayDependency/PortalDisplayDependency.css"
+    ]
+}

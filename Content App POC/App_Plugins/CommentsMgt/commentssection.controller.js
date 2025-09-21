@@ -1,7 +1,7 @@
-﻿var totalCount = 0;
+// Removed global variable to prevent conflicts
 
 angular.module("umbraco")
-    .controller("My.CommentsSectionApp", function ($scope, $http, editorState, userService, contentResource) {
+    .controller("My.CommentsSectionApp", function ($scope, $http, editorState, userService, contentResource, $timeout) {
 
         console.log("CommentsSectionApp controller loaded");
 
@@ -210,11 +210,23 @@ angular.module("umbraco")
             return name.charAt(0).toUpperCase();
         };
 
-        // Initial user check
+        // Initial user check with error handling
         var user = userService.getCurrentUser().then(function (user) {
-            vm.UserName = user.name;
-            vm.UserGroups = user.userGroups;
-            vm.CanAdminComments = checkCommentsAdmin(user.userGroups);
+            try {
+                vm.UserName = user.name;
+                vm.UserGroups = user.userGroups;
+                vm.CanAdminComments = checkCommentsAdmin(user.userGroups);
+            } catch (error) {
+                console.error('CommentsMgt: Error processing user data', error);
+                vm.UserName = 'Unknown User';
+                vm.UserGroups = [];
+                vm.CanAdminComments = false;
+            }
+        }).catch(function(error) {
+            console.error('CommentsMgt: Failed to get current user', error);
+            vm.UserName = 'Unknown User';
+            vm.UserGroups = [];
+            vm.CanAdminComments = false;
         });
 
         // Toggle ShownInPortal for a comment
