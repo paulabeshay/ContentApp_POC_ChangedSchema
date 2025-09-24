@@ -92,7 +92,19 @@ namespace Content_App_POC.Controllers
         {
             int statusId = _configuration.GetValue<int>("CommentsManagement:InitialCommentStatusId", 1);
             bool shownInPortal = _configuration.GetValue<int>("CommentsManagement:InitialVisbilityStatus", 1) == 1;
-            return Ok(new { initialCommentStatusId = statusId, initialVisibilityStatus = shownInPortal });
+            
+            // Include toggle configuration for JavaScript
+            var adminGroup = _configuration["CommentsManagement:UserGroups:AdminGroupName"] ?? "CommentsAdmin";
+            var cmsToggle = _configuration["CommentsManagement:CommentsMgtToggles:CMS"] ?? "cMSDisplay";
+            var portalToggle = _configuration["CommentsManagement:CommentsMgtToggles:Portal"] ?? "portalDisplay";
+            
+            return Ok(new { 
+                initialCommentStatusId = statusId, 
+                initialVisibilityStatus = shownInPortal,
+                adminGroupName = adminGroup,
+                cmsToggleId = cmsToggle,
+                portalToggleId = portalToggle
+            });
         }
 
         [HttpGet("user-groups")]

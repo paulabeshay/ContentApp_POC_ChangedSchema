@@ -9,6 +9,9 @@ builder.Services.AddDbContext<Content_App_POC.CommentsMgt.CommentsMgtContext>(op
 builder.Services.AddScoped<Content_App_POC.CommentsMgt.ICommentRepository, Content_App_POC.CommentsMgt.CommentRepository>();
 builder.Services.AddScoped<Content_App_POC.CommentsMgt.ICommentService, Content_App_POC.CommentsMgt.CommentService>();
 
+// Add Controllers support for API endpoints
+builder.Services.AddControllers();
+
 builder.CreateUmbracoBuilder()
     .AddBackOffice()
     .AddWebsite()
@@ -33,5 +36,8 @@ app.UseUmbraco()
         u.UseBackOfficeEndpoints();
         u.UseWebsiteEndpoints();
     });
+
+// Map API controllers
+app.MapControllers();
 
 await app.RunAsync();
