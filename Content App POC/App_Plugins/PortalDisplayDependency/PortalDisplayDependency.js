@@ -193,8 +193,14 @@ async function disableUmbracoToggles(toggleIds) {
 }
 
 // Using window load event
-window.addEventListener('load', async function () {
+window.addEventListener('load', function () {
     console.log('Page is fully loaded including images, stylesheets, etc.');
+    initializePortalDisplayDependency();
+});
+
+// Main initialization function
+async function initializePortalDisplayDependency() {
+    console.log('Initializing Portal Display Dependency...');
     
     // Step 1: Load configuration from appsettings.json
     await loadConfigurationFromAPI();
@@ -244,9 +250,145 @@ window.addEventListener('load', async function () {
     } else {
         console.warn('Angular not available or not loaded yet');
     }
-});
+}
 
-// Or using onload
+// Enhanced Umbraco event listener setup with multiple approaches
+function setupUmbracoEventListeners() {
+    console.log('Setting up Umbraco event listeners...');
+    
+    // Approach 1: Try Angular events if available
+    if (typeof angular !== 'undefined') {
+        try {
+            console.log('✅ Angular is available - registering Angular events');
+            
+            // Get the Umbraco app module
+            const umbracoApp = angular.module('umbraco');
+            
+            umbracoApp.run(['$rootScope', '$location', function ($rootScope, $location) {
+                console.log('Umbraco Angular app is running - registering events');
+                
+                // Listen for route changes (most reliable for navigation)
+                $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+                    console.log('🔄 Route changed - reinitializing Portal Display Dependency');
+                    setTimeout(initializePortalDisplayDependency, 1000);
+                });
+                
+                // Listen for location changes
+                $rootScope.$on('$locationChangeSuccess', function (event, newUrl, oldUrl) {
+                    console.log('📍 Location changed - reinitializing Portal Display Dependency');
+                    setTimeout(initializePortalDisplayDependency, 1000);
+                });
+                
+                // Listen for content loaded events
+                $rootScope.$on('contentLoaded', function () {
+                    console.log('📄 Content loaded - reinitializing Portal Display Dependency');
+                    setTimeout(initializePortalDisplayDependency, 500);
+                });
+                
+                // Listen for form events
+                $rootScope.$on('formSubmitted', function () {
+                    console.log('📝 Form submitted - checking Portal Display Dependency');
+                    setTimeout(initializePortalDisplayDependency, 500);
+                });
+                
+                // Listen for app ready
+                $rootScope.$on('appReady', function () {
+                    console.log('🚀 App ready - initializing Portal Display Dependency');
+                    setTimeout(initializePortalDisplayDependency, 500);
+                });
+            }]);
+            
+        } catch (e) {
+            console.warn('Could not register Angular event listeners:', e);
+        }
+    }
+    
+    // Approach 2: URL change detection (fallback)
+    let currentUrl = window.location.href;
+    setInterval(function() {
+        if (window.location.href !== currentUrl) {
+            console.log('🔗 URL change detected - reinitializing Portal Display Dependency');
+            currentUrl = window.location.href;
+            setTimeout(initializePortalDisplayDependency, 1000);
+        }
+    }, 1000); // Check every second
+    
+    // Approach 3: MutationObserver for DOM changes (additional fallback)
+    if (typeof MutationObserver !== 'undefined') {
+        const observer = new MutationObserver(function(mutations) {
+            let shouldReinitialize = false;
+            
+            mutations.forEach(function(mutation) {
+                // Check if new nodes contain our target elements
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    for (let node of mutation.addedNodes) {
+                        if (node.nodeType === 1) { // Element node
+                            // Check if it contains our toggle elements or Umbraco content
+                            if (node.querySelector && (
+                                node.querySelector('[id*="Display"]') || 
+                                node.querySelector('.umb-property') ||
+                                node.classList?.contains('umb-editor')
+                            )) {
+                                shouldReinitialize = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+            
+            if (shouldReinitialize) {
+                console.log('🔍 DOM changes detected - reinitializing Portal Display Dependency');
+                setTimeout(initializePortalDisplayDependency, 500);
+            }
+        });
+        
+        // Start observing
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+        
+        console.log('👁️ MutationObserver setup for DOM changes');
+    }
+}
+
+// Debug Angular availability and setup listeners
+console.log('=== Angular Debug Info ===');
+console.log('typeof angular:', typeof angular);
+console.log('window.angular:', window.angular);
+console.log('Angular available:', typeof angular !== 'undefined');
+
+// Setup event listeners immediately if Angular is available
+if (typeof angular !== 'undefined') {
+    setupUmbracoEventListeners();
+} else {
+    console.log('❌ Angular not available immediately, setting up watcher...');
+    
+    // Wait for Angular to become available
+    let angularCheckAttempts = 0;
+    const maxAngularChecks = 20;
+    
+    function checkForAngular() {
+        angularCheckAttempts++;
+        console.log(`Checking for Angular... attempt ${angularCheckAttempts}/${maxAngularChecks}`);
+        
+        if (typeof angular !== 'undefined') {
+            console.log('✅ Angular found after waiting!');
+            setupUmbracoEventListeners();
+        } else if (angularCheckAttempts < maxAngularChecks) {
+            setTimeout(checkForAngular, 500);
+        } else {
+            console.warn('❌ Angular never became available, using fallback methods only');
+            // Still setup the non-Angular fallbacks
+            setupUmbracoEventListeners();
+        }
+    }
+    
+    setTimeout(checkForAngular, 500);
+}
+
+// Or using onload (fallback)
 window.onload = function () {
     console.log('Page fully loaded');
 };
