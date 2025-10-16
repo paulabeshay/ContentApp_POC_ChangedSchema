@@ -7,9 +7,9 @@ A Proof of Concept (POC) application built with **Umbraco CMS** and **.NET 8** t
 This project follows a **Clean Architecture** pattern with clear separation of concerns:
 
 ```
-Content App POC/
-├── Content App POC/           # Main Umbraco web application
-├── CommentsMgt.API/           # API layer - Controllers and endpoints
+Content App POC - ChangedSchema/
+├── Content App POC/           # Main Umbraco web application (hosts Umbraco + Controllers)
+├── CommentsMgt.API/           # API layer - Controllers and endpoints (with Swagger in Development)
 ├── CommentsMgt.Application/   # Application layer - Business logic and services
 ├── CommentsMgt.Domain/        # Domain layer - Entities and business rules
 ├── CommentsMgt.DTOs/          # Data Transfer Objects - Shared contracts
@@ -83,25 +83,33 @@ Content App POC/
    }
    ```
 
-4. **Register Services in Program.cs**
+4. **Register Services in Program.cs (Web App)**
    
    Add the following service registrations:
    ```csharp
-   // Register CommentsMgtContext
-   builder.Services.AddDbContext<Content_App_POC.CommentsMgt.CommentsMgtContext>(options =>
-       options.UseSqlServer(builder.Configuration.GetConnectionString("CommentsMgt")));
-   
-   // Register CommentsMgt repository and service
-   builder.Services.AddScoped<Content_App_POC.CommentsMgt.ICommentRepository, Content_App_POC.CommentsMgt.CommentRepository>();
-   builder.Services.AddScoped<Content_App_POC.CommentsMgt.ICommentService, Content_App_POC.CommentsMgt.CommentService>();
+// Register CommentsMgtContext
+builder.Services.AddDbContext<Content_App_POC.CommentsMgt.CommentsMgtContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CommentsMgt")));
+
+// Register CommentsMgt repository and service
+builder.Services.AddScoped<Content_App_POC.CommentsMgt.ICommentRepository, Content_App_POC.CommentsMgt.CommentRepository>();
+builder.Services.AddScoped<Content_App_POC.CommentsMgt.ICommentService, Content_App_POC.CommentsMgt.CommentService>();
    ```
 
 5. **Build and Run**
-   ```bash
-   dotnet restore
-   dotnet build
-   dotnet run --project "Content App POC"
-   ```
+```bash
+# From the repository root
+dotnet restore
+dotnet build
+
+# Run the Umbraco web app
+dotnet run --project "Content App POC/Content App POC.csproj"
+
+# (Optional) Run the standalone API with Swagger UI at /swagger
+# dotnet run --project "CommentsMgt.API/CommentsMgt.API.csproj"
+```
+
+On first run of the Umbraco web app, complete the Umbraco installer in the browser, then restart if prompted.
 
 ## 🔧 Integration Guide
 
@@ -159,6 +167,11 @@ Ensure these files are in place:
 - `comments-section.js` - Frontend JavaScript
 - `PortalDisplayDependency.cs` - Portal integration
 
+### 5. API Notes
+
+- The `CommentsMgt.API` project exposes the same controllers with Swagger enabled in Development. Run it separately if you want to test endpoints via Swagger (`/swagger`).
+- The main `Content App POC` project also maps controllers, allowing endpoints to be hosted within the Umbraco site if preferred.
+
 ## 📁 Project Structure
 
 ```
@@ -172,7 +185,7 @@ Ensure these files are in place:
 │   │       └── js/               # JavaScript files
 │   └── Views/
 │       └── Partials/             # Partial views
-├── CommentsMgt.API/              # Web API controllers
+├── CommentsMgt.API/              # Web API controllers (Swagger in Development)
 ├── CommentsMgt.Application/      # Business logic and services
 ├── CommentsMgt.Domain/           # Domain entities and business rules
 │   ├── DBEntities/               # Database entities
@@ -188,6 +201,45 @@ Ensure these files are in place:
 - **Comment Repository**: Data access layer
 - **Comments API**: RESTful endpoints for comment management
 - **Umbraco Integration**: Seamless CMS integration with content types
+
+## ♻️ Recent Updates
+
+- Centralized service registration in the web app (`Content App POC/Program.cs`) for `CommentsMgtContext`, repository, and service.
+- API project (`CommentsMgt.API`) configured with Swagger UI in Development.
+- Repository enforces `ShownInPortal` behavior based on comment status (Pending/Rejected => hidden, Approved => visible).
+- Added paginated retrieval for parent comments with attached direct children.
+
+## ✅ Testing
+
+### Test Projects
+
+- `CommentsMgt.API.Tests`
+- `CommentsMgt.Application.Tests`
+- `CommentsMgt.Domain.Tests`
+- `CommentsMgt.DTOs.Tests`
+- `CommentsMgt.Infra.Tests`
+
+### Run All Tests
+
+```bash
+dotnet test
+```
+
+### Run Tests Per Project
+
+```bash
+dotnet test CommentsMgt.Application.Tests/CommentsMgt.Application.Tests.csproj
+dotnet test CommentsMgt.API.Tests/CommentsMgt.API.Tests.csproj
+```
+
+### Optional: Code Coverage (coverlet)
+
+```bash
+dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+```
+
+- Test results are written under `TestResults/` in each test project directory.
+- To view coverage HTML, use ReportGenerator (if installed) to convert the OpenCover output.
 
 ## 🚦 Status Codes
 
