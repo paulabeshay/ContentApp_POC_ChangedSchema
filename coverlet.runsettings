@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <!-- Output formats -->
+          <Format>cobertura,opencover,json,lcov</Format>
+          
+          <!-- Include only CommentsMgt projects -->
+          <Include>[CommentsMgt.*]*</Include>
+          
+          <!-- Exclude test projects and generated files -->
+          <Exclude>
+            [*.Tests]*,
+            [*]*.Program,
+            [*]*.Startup,
+            [*]*Migrations*,
+            [*]*.AssemblyInfo,
+            [*]*.GlobalUsings
+          </Exclude>
+          
+          <!-- Exclude specific attributes -->
+          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+          
+          <!-- Exclude files by path -->
+          <ExcludeByFile>**/Migrations/**/*.cs,**/*Designer.cs,**/obj/**/*.cs</ExcludeByFile>
+          
+          <!-- Use source link -->
+          <UseSourceLink>true</UseSourceLink>
+          
+          <!-- Single hit -->
+          <SingleHit>false</SingleHit>
+          
+          <!-- Include test assembly -->
+          <IncludeTestAssembly>false</IncludeTestAssembly>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

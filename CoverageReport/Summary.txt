@@ -1,0 +1,33 @@
+Summary
+  Generated on: 10/16/2025 - 3:52:53 PM
+  Coverage date: 10/16/2025 - 3:26:38 PM - 10/16/2025 - 3:52:37 PM
+  Parser: MultiReport (22x Cobertura)
+  Assemblies: 4
+  Classes: 5
+  Files: 5
+  Line coverage: 72.5%
+  Covered lines: 29
+  Uncovered lines: 11
+  Coverable lines: 40
+  Total lines: 358
+  Branch coverage: 28.5% (4 of 14)
+  Covered branches: 4
+  Total branches: 14
+  Method coverage: 100% (7 of 7)
+  Full method coverage: 85.7% (6 of 7)
+  Covered methods: 7
+  Fully covered methods: 6
+  Total methods: 7
+
+CommentsMgt.API                                    57.6%
+  Content_App_POC.Controllers.CommentsController   57.6%
+
+CommentsMgt.Application                             100%
+  Content_App_POC.CommentsMgt.CommentService        100%
+
+CommentsMgt.DTOs                                    100%
+  Content_App_POC.CommentsMgt.PaginatedResult<T>    100%
+
+CommentsMgt.Infra                                   100%
+  Content_App_POC.CommentsMgt.CommentRepository     100%
+  Content_App_POC.CommentsMgt.CommentsMgtContext    100%
