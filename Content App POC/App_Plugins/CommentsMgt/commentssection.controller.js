@@ -37,12 +37,18 @@ angular.module("umbraco")
         // Track collapsed state of replies for each parent comment
         vm.collapsedReplies = {};
 
-        // Fetch parent node alias
+        // Fetch parent node alias with enhanced error handling and logging
         contentResource.getById(editorState.current.parentId).then(function (parentNode) {
-            vm.CurrentNodeParentAlias = parentNode.contentTypeAlias;
+            if (editorState.current.parentId === -1) {
+                vm.CurrentNodeParentAlias = "RootwithNoParent";
+            } else {
+                vm.CurrentNodeParentAlias = parentNode.contentTypeAlias || "UnknownAlias";
+            }
             console.log("Parent Content Alias:: " + vm.CurrentNodeParentAlias);
-        }, function (error) {
-            console.error('Failed to fetch parent node alias', error);
+        //});
+        }).catch(function (error) {
+            console.error('Failed to fetch parent node alias. Parent ID:', editorState.current.parentId, 'Error:', error);
+            vm.CurrentNodeParentAlias = "ErrorFetchingAlias";
         });
 
         // Fetch comments for the current content id
